@@ -35,6 +35,12 @@ const NavBar = (props: ChakraProps) => {
       <MenuItems>
         <DarkModeSwitch />
       </MenuItems>
+      <MenuItems>
+        <NextLink href="/login">Login</NextLink>
+      </MenuItems>
+      <MenuItems>
+        <NextLink href="/register">Register</NextLink>
+      </MenuItems>
     </>
   );
 
