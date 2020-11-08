@@ -16,11 +16,17 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   authors: Array<Author>;
-  bookItem: Array<BookItem>;
+  bookItem: BookItem;
+  bookItems: Array<BookItem>;
   books: Array<Book>;
   checkedOutBooks: Array<CheckedOutBooks>;
   me?: Maybe<User>;
   users: Array<User>;
+};
+
+
+export type QueryBookItemArgs = {
+  id: Scalars['Int'];
 };
 
 export type Author = {
@@ -203,6 +209,44 @@ export type RegisterMutation = (
   ) }
 );
 
+export type BookItemQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type BookItemQuery = (
+  { __typename?: 'Query' }
+  & { bookItem: (
+    { __typename?: 'BookItem' }
+    & Pick<BookItem, 'id' | 'title' | 'edition' | 'category' | 'numberOfCopies' | 'publicationDate' | 'createdAt'>
+    & { author: (
+      { __typename?: 'Author' }
+      & Pick<Author, 'id' | 'authorName' | 'description'>
+    ), books: Array<(
+      { __typename?: 'Book' }
+      & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status' | 'createdAt' | 'updatedAt'>
+    )> }
+  ) }
+);
+
+export type BookItemsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BookItemsQuery = (
+  { __typename?: 'Query' }
+  & { bookItems: Array<(
+    { __typename?: 'BookItem' }
+    & Pick<BookItem, 'id' | 'title' | 'edition' | 'category' | 'numberOfCopies' | 'publicationDate' | 'createdAt'>
+    & { author: (
+      { __typename?: 'Author' }
+      & Pick<Author, 'id' | 'authorName' | 'description'>
+    ), books: Array<(
+      { __typename?: 'Book' }
+      & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status' | 'createdAt' | 'updatedAt'>
+    )> }
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -337,6 +381,109 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const BookItemDocument = gql`
+    query BookItem($id: Int!) {
+  bookItem(id: $id) {
+    id
+    title
+    author {
+      id
+      authorName
+      description
+    }
+    edition
+    category
+    numberOfCopies
+    books {
+      id
+      isbnNumber
+      rackNumber
+      status
+      createdAt
+      updatedAt
+    }
+    publicationDate
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useBookItemQuery__
+ *
+ * To run a query within a React component, call `useBookItemQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookItemQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookItemQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBookItemQuery(baseOptions: Apollo.QueryHookOptions<BookItemQuery, BookItemQueryVariables>) {
+        return Apollo.useQuery<BookItemQuery, BookItemQueryVariables>(BookItemDocument, baseOptions);
+      }
+export function useBookItemLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookItemQuery, BookItemQueryVariables>) {
+          return Apollo.useLazyQuery<BookItemQuery, BookItemQueryVariables>(BookItemDocument, baseOptions);
+        }
+export type BookItemQueryHookResult = ReturnType<typeof useBookItemQuery>;
+export type BookItemLazyQueryHookResult = ReturnType<typeof useBookItemLazyQuery>;
+export type BookItemQueryResult = Apollo.QueryResult<BookItemQuery, BookItemQueryVariables>;
+export const BookItemsDocument = gql`
+    query BookItems {
+  bookItems {
+    id
+    title
+    author {
+      id
+      authorName
+      description
+    }
+    edition
+    category
+    numberOfCopies
+    books {
+      id
+      isbnNumber
+      rackNumber
+      status
+      createdAt
+      updatedAt
+    }
+    publicationDate
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useBookItemsQuery__
+ *
+ * To run a query within a React component, call `useBookItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookItemsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBookItemsQuery(baseOptions?: Apollo.QueryHookOptions<BookItemsQuery, BookItemsQueryVariables>) {
+        return Apollo.useQuery<BookItemsQuery, BookItemsQueryVariables>(BookItemsDocument, baseOptions);
+      }
+export function useBookItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookItemsQuery, BookItemsQueryVariables>) {
+          return Apollo.useLazyQuery<BookItemsQuery, BookItemsQueryVariables>(BookItemsDocument, baseOptions);
+        }
+export type BookItemsQueryHookResult = ReturnType<typeof useBookItemsQuery>;
+export type BookItemsLazyQueryHookResult = ReturnType<typeof useBookItemsLazyQuery>;
+export type BookItemsQueryResult = Apollo.QueryResult<BookItemsQuery, BookItemsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

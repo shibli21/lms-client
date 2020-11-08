@@ -1,0 +1,24 @@
+query BookItem($id: Int!) {
+  bookItem(id: $id) {
+    id
+    title
+    author {
+      id
+      authorName
+      description
+    }
+    edition
+    category
+    numberOfCopies
+    books {
+      id
+      isbnNumber
+      rackNumber
+      status
+      createdAt
+      updatedAt
+    }
+    publicationDate
+    createdAt
+  }
+}
