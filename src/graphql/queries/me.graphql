@@ -1,0 +1,13 @@
+query Me {
+  me {
+    id
+    username
+    studentId
+    email
+    status
+    isLibrarian
+    numberOfBooksCheckedOut
+    createdAt
+    updatedAt
+  }
+}

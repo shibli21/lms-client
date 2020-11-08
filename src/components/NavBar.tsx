@@ -11,6 +11,7 @@ import {
   Icon,
   Image,
   Stack,
+  Text,
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/core";
@@ -19,6 +20,11 @@ import NextLink from "next/link";
 import React from "react";
 import { FaBars } from "react-icons/fa";
 import { RiCloseFill } from "react-icons/ri";
+import {
+  MeDocument,
+  useLogoutMutation,
+  useMeQuery,
+} from "../generated/graphql";
 import { DarkModeSwitch } from "./DarkModeSwitch";
 import Logo from "./Logo";
 import MenuItems from "./MenuItems";
@@ -27,31 +33,55 @@ const NavBar = (props: ChakraProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const Router = useRouter();
 
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === "dark";
+  const { data, loading } = useMeQuery();
+  const [logout] = useLogoutMutation();
 
-  const NavLinks = (
-    <>
-      <MenuItems>
-        <DarkModeSwitch />
-      </MenuItems>
-      <MenuItems>
-        <NextLink href="/login">Login</NextLink>
-      </MenuItems>
-      <MenuItems>
-        <NextLink href="/register">Register</NextLink>
-      </MenuItems>
-    </>
-  );
+  let NavLinks: any = null;
+
+  if (loading) {
+  } else if (!data?.me) {
+    NavLinks = (
+      <>
+        <MenuItems>
+          <DarkModeSwitch />
+        </MenuItems>
+        <MenuItems>
+          <NextLink href="/login">Login</NextLink>
+        </MenuItems>
+        <MenuItems>
+          <NextLink href="/register">Register</NextLink>
+        </MenuItems>
+      </>
+    );
+  } else {
+    NavLinks = (
+      <>
+        <MenuItems>
+          <DarkModeSwitch />
+        </MenuItems>
+        <MenuItems>
+          <NextLink href="/">
+            <Box
+              cursor="pointer"
+              onClick={() =>
+                logout({
+                  refetchQueries: [{ query: MeDocument }],
+                })
+              }
+            >
+              Logout
+            </Box>
+          </NextLink>
+        </MenuItems>
+        <MenuItems>
+          <Text fontSize="xl">{data.me.username}</Text>
+        </MenuItems>
+      </>
+    );
+  }
 
   return (
-    <Box
-      top={0}
-      position="sticky"
-      zIndex={100}
-      boxShadow="xs"
-      bg={!isDark ? "#FFFFFF" : "#1A202C"}
-    >
+    <Box top={0} position="sticky" zIndex={100} boxShadow="lg">
       <Flex
         as="nav"
         align="center"
