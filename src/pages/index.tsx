@@ -2,6 +2,7 @@ import { Box, Heading, Spinner } from "@chakra-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
 import React from "react";
+import BookItemsTable from "../components/BookItemsTable";
 import { Container } from "../components/Container";
 import { Main } from "../components/Main";
 import { useBookItemsQuery } from "../generated/graphql";
@@ -39,32 +40,9 @@ export default function Home() {
       <Main>
         <Heading align="center">Welcome to</Heading>
         <Heading align="center">Library Management System</Heading>
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Name</th>
-              <th>Edition</th>
-              <th>Category</th>
-              <th>Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.bookItems.map((b) => (
-              <tr>
-                <td>
-                  <NextLink href="/bookItem/[id]" as={`/bookItem/${b.id}`}>
-                    {b.title}
-                  </NextLink>
-                </td>
-                <td>{b.author.authorName}</td>
-                <td>{b.edition}</td>
-                <td>{b.category}</td>
-                <td>{b.numberOfCopies}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+        <NextLink href="/addBookItem">Add bookItem</NextLink>
+        <BookItemsTable data={data} />
       </Main>
     </Container>
   );

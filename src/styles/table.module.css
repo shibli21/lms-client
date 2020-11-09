@@ -1,0 +1,22 @@
+.table td {
+  padding: 15px;
+  border: 1px solid black;
+}
+.table tr {
+  border: 1px solid black;
+}
+
+.table th {
+  border: 1px solid black;
+}
+.table2 td {
+  padding: 8px;
+  border: 1px solid black;
+}
+.table2 tr {
+  border: 1px solid black;
+}
+
+.table2 th {
+  border: 1px solid black;
+}

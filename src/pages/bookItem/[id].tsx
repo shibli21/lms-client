@@ -1,9 +1,13 @@
-import { Box, Heading, HStack, Spinner, Text } from "@chakra-ui/core";
+import { Box, Flex, Heading, IconButton, Spinner, Text } from "@chakra-ui/core";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import styles from "../../styles/table.module.css";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
 import { useBookItemQuery } from "../../generated/graphql";
+import BooksTable from "../../components/BooksTable";
+import BookItemTable from "../../components/BookItemTable";
 
 const BookItem = () => {
   const router = useRouter();
@@ -41,26 +45,53 @@ const BookItem = () => {
   return (
     <Container>
       <Main>
-        <HStack>
-          <Text>{data.bookItem.title}</Text>
-          <Text>{data.bookItem.category}</Text>
-          <Text>{data.bookItem.edition}</Text>
-          <Text>{data.bookItem.numberOfCopies}</Text>
-          <Text>{data.bookItem.publicationDate}</Text>
-          <Text>{data.bookItem.author.authorName}</Text>
-        </HStack>
-        <Box>
-          {data.bookItem.books.map((book) => (
-            <HStack>
-              <Text>{book.id}</Text>
-              <Text>{book.isbnNumber}</Text>
-              <Text>{book.rackNumber}</Text>
-              <Text>{book.status}</Text>
-              <Text>{book.createdAt}</Text>
-              <Text>{book.updatedAt}</Text>
-            </HStack>
-          ))}
-        </Box>
+        <Flex
+          align={["flex-start", "center"]}
+          justifyContent={["space-between", "space-between"]}
+          direction={["column", "row", "row", "row"]}
+        >
+          <Box>
+            <Flex align="baseline">
+              <Text
+                fontSize={["3xl", "3xl", "4xl", "6xl"]}
+                color="blue.500"
+                fontWeight="bold"
+              >
+                Dune
+              </Text>
+              <Text
+                fontSize={["md", "md", "xl", "2xl"]}
+                fontWeight="semibold"
+                ml={4}
+              >
+                by Frank Herbert
+              </Text>
+            </Flex>
+          </Box>
+          <Flex>
+            <IconButton
+              aria-label="delete"
+              icon={<FaTrash />}
+              colorScheme="red"
+              mr={4}
+              size="sm"
+            />
+            <NextLink
+              href="/bookItem/edit/[id]"
+              as={`/bookItem/edit/${data.bookItem.id}`}
+            >
+              <IconButton
+                aria-label="edit"
+                icon={<FaEdit />}
+                colorScheme="blue"
+                size="sm"
+              />
+            </NextLink>
+          </Flex>
+        </Flex>
+        <BookItemTable data={data.bookItem} />
+        <Heading color="blue.500">Available Books</Heading>
+        <BooksTable data={data.bookItem.books} />
       </Main>
     </Container>
   );

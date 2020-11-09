@@ -1,0 +1,17 @@
+mutation AddBookItem($addBookItem: BookItemInputType!) {
+  addBookItem(bookItemInput: $addBookItem) {
+    id
+    title
+    author {
+      id
+      authorName
+      description
+    }
+    edition
+    category
+    numberOfCopies
+    publicationDate
+    createdAt
+    updatedAt
+  }
+}

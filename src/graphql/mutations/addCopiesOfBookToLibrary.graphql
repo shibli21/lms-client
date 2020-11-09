@@ -1,0 +1,5 @@
+mutation AddCopiesOfBookToLibrary($bookInput: BookInputType!) {
+  addCopiesOfBookToLibrary(bookInput: $bookInput) {
+    id
+  }
+}
