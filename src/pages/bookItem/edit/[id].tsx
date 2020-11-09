@@ -27,6 +27,7 @@ import BookItemTable from "../../../components/BookItemTable";
 import BooksTable from "../../../components/BooksTable";
 import { Formik, Form } from "formik";
 import InputField from "../../../components/InputField";
+import { Footer } from "../../../components/Footer";
 
 interface Props {}
 
@@ -65,30 +66,21 @@ const EditBookItem = (props: Props) => {
   return (
     <Container>
       <Main>
-        <Flex
-          align={["flex-start", "center"]}
-          justifyContent={["space-between", "space-between"]}
-          direction={["column", "row", "row", "row"]}
-          mb={10}
-        >
-          <Box>
-            <Flex align="baseline">
-              <Text
-                fontSize={["3xl", "3xl", "4xl", "6xl"]}
-                color="blue.500"
-                fontWeight="bold"
-              >
-                Dune
-              </Text>
-              <Text
-                fontSize={["md", "md", "xl", "2xl"]}
-                fontWeight="semibold"
-                ml={4}
-              >
-                by Frank Herbert
-              </Text>
-            </Flex>
-          </Box>
+        <Flex align="baseline">
+          <Text
+            fontSize={["3xl", "3xl", "4xl", "6xl"]}
+            color="blue.500"
+            fontWeight="bold"
+          >
+            {data.bookItem.title}
+          </Text>
+          <Text
+            fontSize={["md", "md", "xl", "2xl"]}
+            fontWeight="semibold"
+            ml={4}
+          >
+            by {data.bookItem.author.authorName}
+          </Text>
         </Flex>
         <Formik
           initialValues={{ rackNumber: "", isbnNumber: "" }}
@@ -141,6 +133,7 @@ const EditBookItem = (props: Props) => {
         <Heading color="blue.500">Available Books</Heading>
         <BooksTable data={data.bookItem.books} />
       </Main>
+      <Footer></Footer>
     </Container>
   );
 };

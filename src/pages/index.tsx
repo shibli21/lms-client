@@ -1,4 +1,12 @@
-import { Box, Heading, Spinner } from "@chakra-ui/core";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  Heading,
+  HStack,
+  Spinner,
+} from "@chakra-ui/core";
 import Head from "next/head";
 import NextLink from "next/link";
 import React from "react";
@@ -40,8 +48,12 @@ export default function Home() {
       <Main>
         <Heading align="center">Welcome to</Heading>
         <Heading align="center">Library Management System</Heading>
-
-        <NextLink href="/addBookItem">Add bookItem</NextLink>
+        <HStack>
+          <NextLink href="/addBookItem">
+            <Button colorScheme="blue">Add New Book</Button>
+          </NextLink>
+          <Button colorScheme="blue">Add New Author</Button>
+        </HStack>
         <BookItemsTable data={data} />
       </Main>
     </Container>

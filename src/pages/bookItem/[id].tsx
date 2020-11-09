@@ -57,14 +57,14 @@ const BookItem = () => {
                 color="blue.500"
                 fontWeight="bold"
               >
-                Dune
+                {data.bookItem.title}
               </Text>
               <Text
                 fontSize={["md", "md", "xl", "2xl"]}
                 fontWeight="semibold"
                 ml={4}
               >
-                by Frank Herbert
+                by {data.bookItem.author.authorName}
               </Text>
             </Flex>
           </Box>

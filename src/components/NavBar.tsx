@@ -14,6 +14,7 @@ import {
   Text,
   useColorMode,
   useDisclosure,
+  useToken,
 } from "@chakra-ui/core";
 import { useRouter } from "next/dist/client/router";
 import NextLink from "next/link";
@@ -80,8 +81,16 @@ const NavBar = (props: ChakraProps) => {
     );
   }
 
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === "dark";
   return (
-    <Box top={0} position="sticky" zIndex={100} boxShadow="lg">
+    <Box
+      top={0}
+      position="sticky"
+      zIndex={100}
+      boxShadow="lg"
+      bg={!isDark ? "white" : "gray.800"}
+    >
       <Flex
         as="nav"
         align="center"

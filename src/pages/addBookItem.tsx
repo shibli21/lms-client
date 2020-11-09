@@ -38,7 +38,7 @@ const AddBookItem = (props: Props) => {
                 },
               ],
             });
-            router.push("/");
+            router.push(`/bookItem/edit/${data.addBookItem.id}`);
           }}
         >
           {({ isSubmitting }) => (
