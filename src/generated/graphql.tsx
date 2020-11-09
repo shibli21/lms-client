@@ -127,7 +127,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationBorrowBookArgs = {
-  bookId: Scalars['Float'];
+  bookISBN: Scalars['Int'];
 };
 
 export type BookItemInputType = {
@@ -189,6 +189,26 @@ export type AddCopiesOfBookToLibraryMutation = (
   & { addCopiesOfBookToLibrary: (
     { __typename?: 'BookItem' }
     & Pick<BookItem, 'id'>
+  ) }
+);
+
+export type IssueBookMutationVariables = Exact<{
+  bookISBN: Scalars['Int'];
+}>;
+
+
+export type IssueBookMutation = (
+  { __typename?: 'Mutation' }
+  & { borrowBook: (
+    { __typename?: 'CheckedOutBooks' }
+    & Pick<CheckedOutBooks, 'id' | 'createdAt' | 'returnDate' | 'returnedDate' | 'fine'>
+    & { issuedBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'studentId' | 'username' | 'status' | 'isLibrarian'>
+    ), issuedBook: (
+      { __typename?: 'Book' }
+      & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status'>
+    ) }
   ) }
 );
 
@@ -365,6 +385,55 @@ export function useAddCopiesOfBookToLibraryMutation(baseOptions?: Apollo.Mutatio
 export type AddCopiesOfBookToLibraryMutationHookResult = ReturnType<typeof useAddCopiesOfBookToLibraryMutation>;
 export type AddCopiesOfBookToLibraryMutationResult = Apollo.MutationResult<AddCopiesOfBookToLibraryMutation>;
 export type AddCopiesOfBookToLibraryMutationOptions = Apollo.BaseMutationOptions<AddCopiesOfBookToLibraryMutation, AddCopiesOfBookToLibraryMutationVariables>;
+export const IssueBookDocument = gql`
+    mutation IssueBook($bookISBN: Int!) {
+  borrowBook(bookISBN: $bookISBN) {
+    id
+    issuedBy {
+      id
+      studentId
+      username
+      status
+      isLibrarian
+    }
+    issuedBook {
+      id
+      isbnNumber
+      rackNumber
+      status
+    }
+    createdAt
+    returnDate
+    returnedDate
+    fine
+  }
+}
+    `;
+export type IssueBookMutationFn = Apollo.MutationFunction<IssueBookMutation, IssueBookMutationVariables>;
+
+/**
+ * __useIssueBookMutation__
+ *
+ * To run a mutation, you first call `useIssueBookMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIssueBookMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [issueBookMutation, { data, loading, error }] = useIssueBookMutation({
+ *   variables: {
+ *      bookISBN: // value for 'bookISBN'
+ *   },
+ * });
+ */
+export function useIssueBookMutation(baseOptions?: Apollo.MutationHookOptions<IssueBookMutation, IssueBookMutationVariables>) {
+        return Apollo.useMutation<IssueBookMutation, IssueBookMutationVariables>(IssueBookDocument, baseOptions);
+      }
+export type IssueBookMutationHookResult = ReturnType<typeof useIssueBookMutation>;
+export type IssueBookMutationResult = Apollo.MutationResult<IssueBookMutation>;
+export type IssueBookMutationOptions = Apollo.BaseMutationOptions<IssueBookMutation, IssueBookMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(password: $password, email: $email) {

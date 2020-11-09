@@ -1,0 +1,22 @@
+mutation IssueBook($bookISBN: Int!) {
+  borrowBook(bookISBN: $bookISBN) {
+    id
+    issuedBy {
+      id
+      studentId
+      username
+      status
+      isLibrarian
+    }
+    issuedBook {
+      id
+      isbnNumber
+      rackNumber
+      status
+    }
+    createdAt
+    returnDate
+    returnedDate
+    fine
+  }
+}
