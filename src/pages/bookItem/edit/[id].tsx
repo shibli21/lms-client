@@ -133,7 +133,7 @@ const EditBookItem = (props: Props) => {
         <Heading color="blue.500">Available Books</Heading>
         <BooksTable data={data.bookItem.books} />
       </Main>
-      <Footer></Footer>
+      <Footer>&copy; All rights reserved by shibli</Footer>
     </Container>
   );
 };

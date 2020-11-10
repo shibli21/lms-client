@@ -78,7 +78,11 @@ const NavBar = (props: ChakraProps) => {
           </NextLink>
         </MenuItems>
         <MenuItems>
-          <Text fontSize="xl">{data.me.username}</Text>
+          <NextLink href={`/${data.me.username}`}>
+            <Text fontSize="xl" cursor="pointer">
+              {data.me.username}
+            </Text>
+          </NextLink>
         </MenuItems>
       </>
     );

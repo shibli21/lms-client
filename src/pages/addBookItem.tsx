@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import { Router, useRouter } from "next/router";
 import React from "react";
 import { Container } from "../components/Container";
+import { Footer } from "../components/Footer";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import {
@@ -73,6 +74,7 @@ const AddBookItem = (props: Props) => {
           )}
         </Formik>
       </Main>
+      <Footer> copy; All rights reserve by shibli</Footer>
     </Container>
   );
 };

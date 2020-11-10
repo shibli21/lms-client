@@ -1,7 +1,10 @@
 import React from "react";
 import styles from "../styles/table.module.css";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 const BookItemTable = ({ data }) => {
+  dayjs.extend(customParseFormat);
   return (
     <table className={styles.table}>
       <tr>
@@ -26,7 +29,7 @@ const BookItemTable = ({ data }) => {
       </tr>
       <tr>
         <th>Publication Date</th>
-        <td>{data.publicationDate}</td>
+        <td>{dayjs(data.publicationDate, "MM-DD-YYYY").toString()}</td>
       </tr>
     </table>
   );

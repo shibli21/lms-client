@@ -15,11 +15,12 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  authors: Array<Author>;
   bookItem: BookItem;
   bookItems: Array<BookItem>;
+  authors: Array<Author>;
   books: Array<Book>;
   checkedOutBooks: Array<CheckedOutBooks>;
+  issuedBookForCurrentUser: Array<IssuedBookForCurrentUser>;
   me?: Maybe<User>;
   users: Array<User>;
 };
@@ -27,14 +28,6 @@ export type Query = {
 
 export type QueryBookItemArgs = {
   id: Scalars['Int'];
-};
-
-export type Author = {
-  __typename?: 'Author';
-  id: Scalars['Float'];
-  authorName: Scalars['String'];
-  description?: Maybe<Scalars['String']>;
-  books?: Maybe<Array<BookItem>>;
 };
 
 export type BookItem = {
@@ -49,6 +42,14 @@ export type BookItem = {
   publicationDate: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type Author = {
+  __typename?: 'Author';
+  id: Scalars['Float'];
+  authorName: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  books?: Maybe<Array<BookItem>>;
 };
 
 export type Book = {
@@ -69,7 +70,7 @@ export type CheckedOutBooks = {
   issuedBook: Book;
   createdAt: Scalars['String'];
   returnDate: Scalars['DateTime'];
-  returnedDate: Scalars['DateTime'];
+  returnedDate?: Maybe<Scalars['DateTime']>;
   fine: Scalars['Int'];
 };
 
@@ -87,21 +88,25 @@ export type User = {
 };
 
 
+export type IssuedBookForCurrentUser = {
+  __typename?: 'IssuedBookForCurrentUser';
+  id: Scalars['Float'];
+  createdAt: Scalars['String'];
+  returnDate: Scalars['DateTime'];
+  returnedDate?: Maybe<Scalars['DateTime']>;
+  fine: Scalars['Int'];
+  title: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  addAuthorToLibrary: Author;
   addBookItem: BookItem;
   addCopiesOfBookToLibrary: BookItem;
+  addAuthorToLibrary: Author;
+  borrowBook: CheckedOutBooks;
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
-  borrowBook: CheckedOutBooks;
-};
-
-
-export type MutationAddAuthorToLibraryArgs = {
-  description: Scalars['String'];
-  name: Scalars['String'];
 };
 
 
@@ -115,6 +120,17 @@ export type MutationAddCopiesOfBookToLibraryArgs = {
 };
 
 
+export type MutationAddAuthorToLibraryArgs = {
+  description: Scalars['String'];
+  name: Scalars['String'];
+};
+
+
+export type MutationBorrowBookArgs = {
+  bookISBN: Scalars['Int'];
+};
+
+
 export type MutationRegisterArgs = {
   options: UserInputType;
 };
@@ -123,11 +139,6 @@ export type MutationRegisterArgs = {
 export type MutationLoginArgs = {
   password: Scalars['String'];
   email: Scalars['String'];
-};
-
-
-export type MutationBorrowBookArgs = {
-  bookISBN: Scalars['Int'];
 };
 
 export type BookItemInputType = {
@@ -294,6 +305,17 @@ export type BookItemsQuery = (
       { __typename?: 'Book' }
       & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status' | 'createdAt' | 'updatedAt'>
     )> }
+  )> }
+);
+
+export type IssuedBookForCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IssuedBookForCurrentUserQuery = (
+  { __typename?: 'Query' }
+  & { issuedBookForCurrentUser: Array<(
+    { __typename?: 'IssuedBookForCurrentUser' }
+    & Pick<IssuedBookForCurrentUser, 'id' | 'returnDate' | 'createdAt' | 'returnedDate' | 'fine' | 'title'>
   )> }
 );
 
@@ -659,6 +681,43 @@ export function useBookItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type BookItemsQueryHookResult = ReturnType<typeof useBookItemsQuery>;
 export type BookItemsLazyQueryHookResult = ReturnType<typeof useBookItemsLazyQuery>;
 export type BookItemsQueryResult = Apollo.QueryResult<BookItemsQuery, BookItemsQueryVariables>;
+export const IssuedBookForCurrentUserDocument = gql`
+    query IssuedBookForCurrentUser {
+  issuedBookForCurrentUser {
+    id
+    returnDate
+    createdAt
+    returnedDate
+    fine
+    title
+  }
+}
+    `;
+
+/**
+ * __useIssuedBookForCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useIssuedBookForCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIssuedBookForCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIssuedBookForCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useIssuedBookForCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<IssuedBookForCurrentUserQuery, IssuedBookForCurrentUserQueryVariables>) {
+        return Apollo.useQuery<IssuedBookForCurrentUserQuery, IssuedBookForCurrentUserQueryVariables>(IssuedBookForCurrentUserDocument, baseOptions);
+      }
+export function useIssuedBookForCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IssuedBookForCurrentUserQuery, IssuedBookForCurrentUserQueryVariables>) {
+          return Apollo.useLazyQuery<IssuedBookForCurrentUserQuery, IssuedBookForCurrentUserQueryVariables>(IssuedBookForCurrentUserDocument, baseOptions);
+        }
+export type IssuedBookForCurrentUserQueryHookResult = ReturnType<typeof useIssuedBookForCurrentUserQuery>;
+export type IssuedBookForCurrentUserLazyQueryHookResult = ReturnType<typeof useIssuedBookForCurrentUserLazyQuery>;
+export type IssuedBookForCurrentUserQueryResult = Apollo.QueryResult<IssuedBookForCurrentUserQuery, IssuedBookForCurrentUserQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

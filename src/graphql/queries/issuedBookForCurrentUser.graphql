@@ -1,0 +1,10 @@
+query IssuedBookForCurrentUser {
+  issuedBookForCurrentUser {
+    id
+    returnDate
+    createdAt
+    returnedDate
+    fine
+    title
+  }
+}
