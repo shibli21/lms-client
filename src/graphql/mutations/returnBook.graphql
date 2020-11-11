@@ -1,0 +1,11 @@
+mutation ReturnBook($bookISBN: Int!) {
+  returnBook(bookISBN: $bookISBN) {
+    errors {
+      field
+      message
+    }
+    checkOutBook {
+      id
+    }
+  }
+}

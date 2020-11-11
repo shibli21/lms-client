@@ -96,6 +96,7 @@ export type IssuedBookForCurrentUser = {
   returnedDate?: Maybe<Scalars['DateTime']>;
   fine: Scalars['Int'];
   title: Scalars['String'];
+  isbnNumber: Scalars['Float'];
 };
 
 export type Mutation = {
@@ -104,6 +105,7 @@ export type Mutation = {
   addCopiesOfBookToLibrary: BookItem;
   addAuthorToLibrary: Author;
   borrowBook: IssueBookResponse;
+  returnBook: IssueBookResponse;
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
@@ -127,6 +129,11 @@ export type MutationAddAuthorToLibraryArgs = {
 
 
 export type MutationBorrowBookArgs = {
+  bookISBN: Scalars['Int'];
+};
+
+
+export type MutationReturnBookArgs = {
   bookISBN: Scalars['Int'];
 };
 
@@ -278,6 +285,25 @@ export type RegisterMutation = (
     )>>, user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'studentId' | 'username' | 'email' | 'status' | 'isLibrarian' | 'numberOfBooksCheckedOut' | 'createdAt' | 'updatedAt'>
+    )> }
+  ) }
+);
+
+export type ReturnBookMutationVariables = Exact<{
+  bookISBN: Scalars['Int'];
+}>;
+
+
+export type ReturnBookMutation = (
+  { __typename?: 'Mutation' }
+  & { returnBook: (
+    { __typename?: 'IssueBookResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, checkOutBook?: Maybe<(
+      { __typename?: 'CheckedOutBooks' }
+      & Pick<CheckedOutBooks, 'id'>
     )> }
   ) }
 );
@@ -597,6 +623,44 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const ReturnBookDocument = gql`
+    mutation ReturnBook($bookISBN: Int!) {
+  returnBook(bookISBN: $bookISBN) {
+    errors {
+      field
+      message
+    }
+    checkOutBook {
+      id
+    }
+  }
+}
+    `;
+export type ReturnBookMutationFn = Apollo.MutationFunction<ReturnBookMutation, ReturnBookMutationVariables>;
+
+/**
+ * __useReturnBookMutation__
+ *
+ * To run a mutation, you first call `useReturnBookMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReturnBookMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [returnBookMutation, { data, loading, error }] = useReturnBookMutation({
+ *   variables: {
+ *      bookISBN: // value for 'bookISBN'
+ *   },
+ * });
+ */
+export function useReturnBookMutation(baseOptions?: Apollo.MutationHookOptions<ReturnBookMutation, ReturnBookMutationVariables>) {
+        return Apollo.useMutation<ReturnBookMutation, ReturnBookMutationVariables>(ReturnBookDocument, baseOptions);
+      }
+export type ReturnBookMutationHookResult = ReturnType<typeof useReturnBookMutation>;
+export type ReturnBookMutationResult = Apollo.MutationResult<ReturnBookMutation>;
+export type ReturnBookMutationOptions = Apollo.BaseMutationOptions<ReturnBookMutation, ReturnBookMutationVariables>;
 export const BookItemDocument = gql`
     query BookItem($id: Int!) {
   bookItem(id: $id) {
