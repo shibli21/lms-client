@@ -6,6 +6,7 @@ import { Container } from "../components/Container";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import { useIssueBookMutation } from "../generated/graphql";
+import { toErrorMap } from "../utils/toErrorMap";
 
 interface Props {}
 
@@ -17,21 +18,25 @@ const IssueNewBook = (props: Props) => {
       <Main>
         <Heading>Issue Book</Heading>
         <Formik
-          initialValues={{ isbn: "" }}
-          onSubmit={async (values) => {
-            await issueBook({
+          initialValues={{ book: "" }}
+          onSubmit={async (values, { setErrors }) => {
+            const response = await issueBook({
               variables: {
-                bookISBN: parseInt(values.isbn),
+                bookISBN: parseInt(values.book),
               },
             });
-            router.push("/");
+            if (response.data.borrowBook.errors) {
+              setErrors(toErrorMap(response.data.borrowBook.errors));
+            } else {
+              router.push("/");
+            }
           }}
         >
           {({ isSubmitting }) => (
             <Form>
               <Stack spacing={6}>
                 <InputField
-                  name="isbn"
+                  name="book"
                   placeholder="ISBN Number"
                   label="ISBN Number"
                 />

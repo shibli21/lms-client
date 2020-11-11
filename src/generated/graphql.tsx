@@ -103,7 +103,7 @@ export type Mutation = {
   addBookItem: BookItem;
   addCopiesOfBookToLibrary: BookItem;
   addAuthorToLibrary: Author;
-  borrowBook: CheckedOutBooks;
+  borrowBook: IssueBookResponse;
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
@@ -154,16 +154,22 @@ export type BookInputType = {
   bookItemId: Scalars['Int'];
 };
 
-export type UserResponse = {
-  __typename?: 'UserResponse';
+export type IssueBookResponse = {
+  __typename?: 'IssueBookResponse';
   errors?: Maybe<Array<FieldError>>;
-  user?: Maybe<User>;
+  checkOutBook?: Maybe<CheckedOutBooks>;
 };
 
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
   message: Scalars['String'];
+};
+
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  errors?: Maybe<Array<FieldError>>;
+  user?: Maybe<User>;
 };
 
 export type UserInputType = {
@@ -211,15 +217,21 @@ export type IssueBookMutationVariables = Exact<{
 export type IssueBookMutation = (
   { __typename?: 'Mutation' }
   & { borrowBook: (
-    { __typename?: 'CheckedOutBooks' }
-    & Pick<CheckedOutBooks, 'id' | 'createdAt' | 'returnDate' | 'returnedDate' | 'fine'>
-    & { issuedBy: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'studentId' | 'username' | 'status' | 'isLibrarian'>
-    ), issuedBook: (
-      { __typename?: 'Book' }
-      & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status'>
-    ) }
+    { __typename?: 'IssueBookResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, checkOutBook?: Maybe<(
+      { __typename?: 'CheckedOutBooks' }
+      & Pick<CheckedOutBooks, 'id' | 'createdAt' | 'returnDate' | 'returnedDate' | 'fine'>
+      & { issuedBy: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'studentId' | 'username' | 'email' | 'status' | 'numberOfBooksCheckedOut'>
+      ), issuedBook: (
+        { __typename?: 'Book' }
+        & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status'>
+      ) }
+    )> }
   ) }
 );
 
@@ -410,24 +422,31 @@ export type AddCopiesOfBookToLibraryMutationOptions = Apollo.BaseMutationOptions
 export const IssueBookDocument = gql`
     mutation IssueBook($bookISBN: Int!) {
   borrowBook(bookISBN: $bookISBN) {
-    id
-    issuedBy {
-      id
-      studentId
-      username
-      status
-      isLibrarian
+    errors {
+      field
+      message
     }
-    issuedBook {
+    checkOutBook {
       id
-      isbnNumber
-      rackNumber
-      status
+      issuedBy {
+        id
+        studentId
+        username
+        email
+        status
+        numberOfBooksCheckedOut
+      }
+      issuedBook {
+        id
+        isbnNumber
+        rackNumber
+        status
+      }
+      createdAt
+      returnDate
+      returnedDate
+      fine
     }
-    createdAt
-    returnDate
-    returnedDate
-    fine
   }
 }
     `;

@@ -1,22 +1,29 @@
 mutation IssueBook($bookISBN: Int!) {
   borrowBook(bookISBN: $bookISBN) {
-    id
-    issuedBy {
-      id
-      studentId
-      username
-      status
-      isLibrarian
+    errors {
+      field
+      message
     }
-    issuedBook {
+    checkOutBook {
       id
-      isbnNumber
-      rackNumber
-      status
+      issuedBy {
+        id
+        studentId
+        username
+        email
+        status
+        numberOfBooksCheckedOut
+      }
+      issuedBook {
+        id
+        isbnNumber
+        rackNumber
+        status
+      }
+      createdAt
+      returnDate
+      returnedDate
+      fine
     }
-    createdAt
-    returnDate
-    returnedDate
-    fine
   }
 }
