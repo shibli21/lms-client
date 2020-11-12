@@ -1,5 +1,16 @@
 mutation AddCopiesOfBookToLibrary($bookInput: BookInputType!) {
   addCopiesOfBookToLibrary(bookInput: $bookInput) {
-    id
+    errors {
+      field
+      message
+    }
+    book {
+      id
+      isbnNumber
+      rackNumber
+      status
+      createdAt
+      updatedAt
+    }
   }
 }

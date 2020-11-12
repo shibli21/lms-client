@@ -10,7 +10,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/core";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Container } from "../../../components/Container";
@@ -28,10 +28,14 @@ import BooksTable from "../../../components/BooksTable";
 import { Formik, Form } from "formik";
 import InputField from "../../../components/InputField";
 import { Footer } from "../../../components/Footer";
+import { toErrorMap } from "../../../utils/toErrorMap";
+import { route } from "next/dist/next-server/server/router";
 
 interface Props {}
 
 const EditBookItem = (props: Props) => {
+  const router = useRouter();
+
   const intId = useGetIntId();
   const { data, loading } = useBookItemQuery({
     variables: {
@@ -83,13 +87,13 @@ const EditBookItem = (props: Props) => {
           </Text>
         </Flex>
         <Formik
-          initialValues={{ rackNumber: "", isbnNumber: "" }}
-          onSubmit={async (values) => {
+          initialValues={{ rackNumber: "", isbn: "" }}
+          onSubmit={async (values, { setErrors }) => {
             const { data } = await addCopy({
               variables: {
                 bookInput: {
                   bookItemId: intId,
-                  isbnNumber: parseInt(values.isbnNumber),
+                  isbnNumber: parseInt(values.isbn),
                   rackNumber: values.rackNumber,
                 },
               },
@@ -102,9 +106,14 @@ const EditBookItem = (props: Props) => {
                 },
               ],
             });
+            if (data?.addCopiesOfBookToLibrary.errors) {
+              setErrors(toErrorMap(data.addCopiesOfBookToLibrary.errors));
+            } else {
+              values.isbn = "";
+            }
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, resetForm }) => (
             <Form>
               <Stack spacing={6}>
                 <InputField
@@ -113,7 +122,7 @@ const EditBookItem = (props: Props) => {
                   label="Rack Number"
                 />
                 <InputField
-                  name="isbnNumber"
+                  name="isbn"
                   placeholder="ISBN Number"
                   label="ISBN Number"
                 />

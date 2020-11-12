@@ -102,8 +102,8 @@ export type IssuedBookForCurrentUser = {
 export type Mutation = {
   __typename?: 'Mutation';
   addBookItem: BookItem;
-  addCopiesOfBookToLibrary: BookItem;
   addAuthorToLibrary: Author;
+  addCopiesOfBookToLibrary: AddCopiesOfBookToLibraryResponse;
   borrowBook: IssueBookResponse;
   returnBook: IssueBookResponse;
   register: UserResponse;
@@ -117,14 +117,14 @@ export type MutationAddBookItemArgs = {
 };
 
 
-export type MutationAddCopiesOfBookToLibraryArgs = {
-  bookInput: BookInputType;
-};
-
-
 export type MutationAddAuthorToLibraryArgs = {
   description: Scalars['String'];
   name: Scalars['String'];
+};
+
+
+export type MutationAddCopiesOfBookToLibraryArgs = {
+  bookInput: BookInputType;
 };
 
 
@@ -155,6 +155,18 @@ export type BookItemInputType = {
   edition: Scalars['String'];
 };
 
+export type AddCopiesOfBookToLibraryResponse = {
+  __typename?: 'AddCopiesOfBookToLibraryResponse';
+  errors?: Maybe<Array<FieldError>>;
+  book?: Maybe<Book>;
+};
+
+export type FieldError = {
+  __typename?: 'FieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type BookInputType = {
   isbnNumber: Scalars['Float'];
   rackNumber: Scalars['String'];
@@ -165,12 +177,6 @@ export type IssueBookResponse = {
   __typename?: 'IssueBookResponse';
   errors?: Maybe<Array<FieldError>>;
   checkOutBook?: Maybe<CheckedOutBooks>;
-};
-
-export type FieldError = {
-  __typename?: 'FieldError';
-  field: Scalars['String'];
-  message: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -211,8 +217,14 @@ export type AddCopiesOfBookToLibraryMutationVariables = Exact<{
 export type AddCopiesOfBookToLibraryMutation = (
   { __typename?: 'Mutation' }
   & { addCopiesOfBookToLibrary: (
-    { __typename?: 'BookItem' }
-    & Pick<BookItem, 'id'>
+    { __typename?: 'AddCopiesOfBookToLibraryResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'field' | 'message'>
+    )>>, book?: Maybe<(
+      { __typename?: 'Book' }
+      & Pick<Book, 'id' | 'isbnNumber' | 'rackNumber' | 'status' | 'createdAt' | 'updatedAt'>
+    )> }
   ) }
 );
 
@@ -416,7 +428,18 @@ export type AddBookItemMutationOptions = Apollo.BaseMutationOptions<AddBookItemM
 export const AddCopiesOfBookToLibraryDocument = gql`
     mutation AddCopiesOfBookToLibrary($bookInput: BookInputType!) {
   addCopiesOfBookToLibrary(bookInput: $bookInput) {
-    id
+    errors {
+      field
+      message
+    }
+    book {
+      id
+      isbnNumber
+      rackNumber
+      status
+      createdAt
+      updatedAt
+    }
   }
 }
     `;
