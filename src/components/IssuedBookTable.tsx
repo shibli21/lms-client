@@ -17,6 +17,7 @@ const IssuedBookTable = () => {
     <table className={styles.table}>
       <thead>
         <tr>
+          <th>ISBN</th>
           <th>Title</th>
           <th>Issued date</th>
           <th>Return Date</th>
@@ -27,6 +28,7 @@ const IssuedBookTable = () => {
       <tbody>
         {data.issuedBookForCurrentUser.map((b) => (
           <tr>
+            <td>{b.isbnNumber}</td>
             <td>{b.title}</td>
             <td>{dayjs(b.createdAt).toString()}</td>
             <td>{dayjs(`${new Date(b.returnDate)}`, "MM-YY-DD").toString()}</td>

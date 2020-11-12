@@ -6,5 +6,6 @@ query IssuedBookForCurrentUser {
     returnedDate
     fine
     title
+    isbnNumber
   }
 }

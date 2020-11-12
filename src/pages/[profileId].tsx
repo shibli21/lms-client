@@ -21,6 +21,9 @@ const Profile = (props: Props) => {
     <Container>
       <Main>
         <Heading color="blue.500">{data.me.username}</Heading>
+        <Text fontSize="2xl" fontWeight="semibold">
+          Number of books issued : {data.me.numberOfBooksCheckedOut}
+        </Text>
         <Text fontSize="3xl" fontWeight="semibold">
           Issued Books List
         </Text>

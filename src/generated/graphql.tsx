@@ -365,7 +365,7 @@ export type IssuedBookForCurrentUserQuery = (
   { __typename?: 'Query' }
   & { issuedBookForCurrentUser: Array<(
     { __typename?: 'IssuedBookForCurrentUser' }
-    & Pick<IssuedBookForCurrentUser, 'id' | 'returnDate' | 'createdAt' | 'returnedDate' | 'fine' | 'title'>
+    & Pick<IssuedBookForCurrentUser, 'id' | 'returnDate' | 'createdAt' | 'returnedDate' | 'fine' | 'title' | 'isbnNumber'>
   )> }
 );
 
@@ -796,6 +796,7 @@ export const IssuedBookForCurrentUserDocument = gql`
     returnedDate
     fine
     title
+    isbnNumber
   }
 }
     `;
