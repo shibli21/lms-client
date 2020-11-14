@@ -1,10 +1,8 @@
 import React from "react";
 import styles from "../styles/table.module.css";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import { DateTime } from "luxon";
 
 const BookItemTable = ({ data }) => {
-  dayjs.extend(customParseFormat);
   return (
     <table className={styles.table}>
       <tr>
@@ -29,7 +27,11 @@ const BookItemTable = ({ data }) => {
       </tr>
       <tr>
         <th>Publication Date</th>
-        <td>{dayjs(data.publicationDate, "MM-DD-YYYY").toString()}</td>
+        <td>
+          {DateTime.fromMillis(parseInt(data.publicationDate)).toLocaleString(
+            DateTime.DATE_MED
+          )}
+        </td>
       </tr>
     </table>
   );

@@ -5,10 +5,7 @@ import React from "react";
 import { Container } from "../components/Container";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
-import {
-  useIssueBookMutation,
-  useReturnBookMutation,
-} from "../generated/graphql";
+import { useReturnBookMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 
 interface Props {}
@@ -52,7 +49,7 @@ const ReturnBook = (props: Props) => {
                 isLoading={isSubmitting}
                 colorScheme="blue"
               >
-                Issue Book
+                Return Book
               </Button>
             </Form>
           )}
