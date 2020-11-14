@@ -21,7 +21,9 @@ const ReturnBook = (props: Props) => {
       <Main>
         <Heading>Return Book</Heading>
         <Formik
-          initialValues={{ isbn: "" }}
+          initialValues={{
+            isbn: `${router.query.isbn ? router.query.isbn : ""}`,
+          }}
           onSubmit={async (values, { setErrors }) => {
             const response = await returnBook({
               variables: {

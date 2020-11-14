@@ -5,28 +5,42 @@ import React from "react";
 import { Container } from "../components/Container";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
-import { useIssueBookMutation } from "../generated/graphql";
+import {
+  IssuedBookForCurrentUserDocument,
+  useRenewBookMutation,
+} from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 
 interface Props {}
 
-const IssueNewBook = (props: Props) => {
+const RenewBook = (props: Props) => {
   const router = useRouter();
-  const [issueBook] = useIssueBookMutation();
+  const [renewBook] = useRenewBookMutation();
+  console.log(router.query.isbn);
+
   return (
     <Container>
       <Main>
-        <Heading>Issue Book</Heading>
+        <Heading>Renew Book</Heading>
         <Formik
-          initialValues={{ book: "" }}
+          initialValues={{
+            isbn: `${router.query.isbn ? router.query.isbn : ""}`,
+            days: "2",
+          }}
           onSubmit={async (values, { setErrors }) => {
-            const response = await issueBook({
+            const response = await renewBook({
               variables: {
-                bookISBN: parseInt(values.book),
+                ISBNNumber: parseInt(values.isbn),
+                days: parseInt(values.days),
               },
+              refetchQueries: [
+                {
+                  query: IssuedBookForCurrentUserDocument,
+                },
+              ],
             });
-            if (response.data.issueBook.errors) {
-              setErrors(toErrorMap(response.data.issueBook.errors));
+            if (response.data.renewBook.errors) {
+              setErrors(toErrorMap(response.data.renewBook.errors));
             } else {
               router.push("/");
             }
@@ -36,9 +50,14 @@ const IssueNewBook = (props: Props) => {
             <Form>
               <Stack spacing={6}>
                 <InputField
-                  name="book"
+                  name="isbn"
                   placeholder="ISBN Number"
                   label="ISBN Number"
+                />
+                <InputField
+                  name="days"
+                  label="Number Of Days"
+                  placeholder="Number Of Days"
                 />
               </Stack>
               <Button
@@ -47,7 +66,7 @@ const IssueNewBook = (props: Props) => {
                 isLoading={isSubmitting}
                 colorScheme="blue"
               >
-                Issue Book
+                Renew Book
               </Button>
             </Form>
           )}
@@ -57,4 +76,4 @@ const IssueNewBook = (props: Props) => {
   );
 };
 
-export default IssueNewBook;
+export default RenewBook;

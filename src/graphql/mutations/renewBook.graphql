@@ -1,5 +1,5 @@
-mutation IssueBook($bookISBN: Int!) {
-  issueBook(bookISBN: $bookISBN) {
+mutation RenewBook($days: Int!, $ISBNNumber: Int!) {
+  renewBook(days: $days, ISBNNumber: $ISBNNumber) {
     errors {
       field
       message
@@ -8,19 +8,11 @@ mutation IssueBook($bookISBN: Int!) {
       id
       issuedBy {
         id
-        studentId
-        username
-        email
-        status
-        numberOfBooksCheckedOut
       }
       issuedBook {
         id
         isbnNumber
-        rackNumber
-        status
       }
-      createdAt
       returnDate
       returnedDate
       fine
