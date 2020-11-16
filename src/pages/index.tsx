@@ -1,13 +1,19 @@
-import { Box, Button, Heading, HStack, Spinner } from "@chakra-ui/core";
-import { Form, Formik } from "formik";
+import {
+  Box,
+  Button,
+  FormLabel,
+  Heading,
+  HStack,
+  Input,
+  Spinner,
+} from "@chakra-ui/core";
+import { useFormik } from "formik";
 import Head from "next/head";
 import NextLink from "next/link";
-import { off } from "process";
 import React, { useState } from "react";
 import BookItemsTable from "../components/BookItemsTable";
 import { Container } from "../components/Container";
 import { Footer } from "../components/Footer";
-import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import { usePaginatedBookItemsQuery } from "../generated/graphql";
 
@@ -15,13 +21,63 @@ export default function Home() {
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
 
-  const { data, loading, refetch } = usePaginatedBookItemsQuery({
-    variables: {
-      limit,
-      offset,
-      input: {},
+  const formik = useFormik({
+    initialValues: {
+      author: "",
+      title: "",
+      category: "",
+    },
+    onSubmit: async (values) => {
+      setOffset(0);
+      await refetch({
+        input: {
+          author: values.author,
+          title: values.title,
+          category: values.category,
+        },
+      });
     },
   });
+
+  const { data, loading, refetch } = usePaginatedBookItemsQuery({
+    variables: {
+      input: {},
+      limit,
+      offset,
+    },
+  });
+
+  console.log(data);
+
+  const fetchPrevPage = async () => {
+    if (offset - limit < limit) {
+      setOffset(0);
+    }
+    setOffset(offset - limit);
+    await refetch({
+      input: {
+        author: formik.values.author,
+        title: formik.values.title,
+        category: formik.values.category,
+      },
+      limit,
+      offset,
+    });
+  };
+  const fetchNextPage = async () => {
+    setOffset(offset + limit);
+    console.log(formik.values.title);
+
+    await refetch({
+      input: {
+        author: formik.values.author,
+        title: formik.values.title,
+        category: formik.values.category,
+      },
+      limit,
+      offset,
+    });
+  };
 
   if (loading) {
     return (
@@ -59,84 +115,56 @@ export default function Home() {
           </NextLink>
           <Button colorScheme="blue">Add New Author</Button>
         </HStack>
+        <HStack>
+          <form onSubmit={formik.handleSubmit}>
+            <HStack spacing={6}>
+              <FormLabel htmlFor="title">Title</FormLabel>
+              <Input
+                id="title"
+                name="title"
+                type="search"
+                onChange={formik.handleChange}
+                value={formik.values.title}
+              />
+              <FormLabel htmlFor="author">Author</FormLabel>
+              <Input
+                id="author"
+                name="author"
+                type="search"
+                onChange={formik.handleChange}
+                value={formik.values.author}
+              />
+              <FormLabel htmlFor="category">Category</FormLabel>
+              <Input
+                id="category"
+                name="category"
+                type="search"
+                onChange={formik.handleChange}
+                value={formik.values.category}
+              />
+            </HStack>
+            <Button
+              mt={6}
+              type="submit"
+              isLoading={formik.isSubmitting}
+              colorScheme="blue"
+            >
+              Search
+            </Button>
+          </form>
+        </HStack>
 
-        <Formik
-          initialValues={{ author: "", title: "", category: "" }}
-          onSubmit={async (values) => {
-            setOffset(0);
-            refetch({
-              input: {
-                title: values.title,
-                author: values.author,
-                category: values.category,
-              },
-            });
-          }}
-        >
-          {({ isSubmitting, values }) => (
-            <Form>
-              <HStack spacing={6}>
-                <InputField name="title" placeholder="Title" label="Title" />
-                <InputField name="author" placeholder="Author" label="Author" />
-                <InputField
-                  name="category"
-                  placeholder="Category"
-                  label="Category"
-                />
-              </HStack>
-              <Button
-                mt={6}
-                type="submit"
-                isLoading={isSubmitting}
-                colorScheme="blue"
-              >
-                Search
-              </Button>
-
-              <BookItemsTable data={data.paginatedBookItems.bookItems} />
-              <HStack>
-                {offset > 0 ? (
-                  <Button
-                    onClick={() => {
-                      setOffset(offset - limit);
-                      refetch({
-                        limit,
-                        offset: limit + offset,
-                        input: {
-                          title: values.title,
-                          author: values.author,
-                          category: values.category,
-                        },
-                      });
-                    }}
-                  >
-                    Previous Page
-                  </Button>
-                ) : null}
-                {data.paginatedBookItems.hasMore ? (
-                  <Button
-                    onClick={() => {
-                      setOffset(limit + offset);
-                      refetch({
-                        limit,
-                        offset: limit + offset,
-                        input: {
-                          title: values.title,
-                          author: values.author,
-                          category: values.category,
-                        },
-                      });
-                    }}
-                  >
-                    Next Page
-                  </Button>
-                ) : null}
-              </HStack>
-            </Form>
-          )}
-        </Formik>
-        <Footer>Shibli</Footer>
+        <BookItemsTable data={data.paginatedBookItems.bookItems} />
+        <HStack>
+          {offset > 0 ? (
+            <Button onClick={() => fetchPrevPage()}>Previous Page</Button>
+          ) : null}
+          {data.paginatedBookItems.hasMore ? (
+            <Button onClick={() => fetchNextPage()}>Next Page</Button>
+          ) : null}
+        </HStack>
       </Main>
+      <Footer> copy; All rights reserve by shibli</Footer>
     </Container>
   );
 }
