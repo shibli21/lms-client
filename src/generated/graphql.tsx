@@ -33,7 +33,7 @@ export type QueryBookItemArgs = {
 
 
 export type QueryPaginatedBookItemsArgs = {
-  input: SearchBooksInput;
+  input?: Maybe<SearchBooksInput>;
   limit: Scalars['Int'];
   offset: Scalars['Int'];
 };
@@ -435,7 +435,7 @@ export type MeQuery = (
 );
 
 export type PaginatedBookItemsQueryVariables = Exact<{
-  input: SearchBooksInput;
+  input?: Maybe<SearchBooksInput>;
   limit: Scalars['Int'];
   offset: Scalars['Int'];
 }>;
@@ -992,7 +992,7 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PaginatedBookItemsDocument = gql`
-    query PaginatedBookItems($input: SearchBooksInput!, $limit: Int!, $offset: Int!) {
+    query PaginatedBookItems($input: SearchBooksInput, $limit: Int!, $offset: Int!) {
   paginatedBookItems(input: $input, limit: $limit, offset: $offset) {
     bookItems {
       id

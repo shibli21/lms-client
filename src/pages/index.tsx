@@ -20,7 +20,11 @@ import { usePaginatedBookItemsQuery } from "../generated/graphql";
 export default function Home() {
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
-
+  const [searchFilter, setSearchFilter] = useState({
+    title: "",
+    author: "",
+    category: "",
+  });
   const formik = useFormik({
     initialValues: {
       author: "",
@@ -30,24 +34,33 @@ export default function Home() {
     onSubmit: async (values) => {
       setOffset(0);
       await refetch({
+        limit,
+        offset,
         input: {
-          author: values.author,
-          title: values.title,
-          category: values.category,
+          author: values.author.trim(),
+          title: values.title.trim(),
+          category: values.category.trim(),
         },
+      });
+      setSearchFilter({
+        title: values.title.trim(),
+        author: values.author.trim(),
+        category: values.category.trim(),
       });
     },
   });
 
   const { data, loading, refetch } = usePaginatedBookItemsQuery({
     variables: {
-      input: {},
+      input: {
+        title: searchFilter.title.trim(),
+        author: searchFilter.author.trim(),
+        category: searchFilter.category.trim(),
+      },
       limit,
       offset,
     },
   });
-
-  console.log(data);
 
   const fetchPrevPage = async () => {
     if (offset - limit < limit) {
@@ -66,9 +79,7 @@ export default function Home() {
   };
   const fetchNextPage = async () => {
     setOffset(offset + limit);
-    console.log(formik.values.title);
-
-    await refetch({
+    refetch({
       input: {
         author: formik.values.author,
         title: formik.values.title,
