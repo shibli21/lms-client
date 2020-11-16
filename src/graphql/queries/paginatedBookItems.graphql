@@ -1,0 +1,24 @@
+query PaginatedBookItems(
+  $input: SearchBooksInput
+  $limit: Int!
+  $offset: Int!
+) {
+  paginatedBookItems(input: $input, limit: $limit, offset: $offset) {
+    bookItems {
+      id
+      title
+      author {
+        id
+        authorName
+        description
+      }
+      edition
+      category
+      numberOfCopies
+      publicationDate
+      createdAt
+      updatedAt
+    }
+    hasMore
+  }
+}

@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/core";
 import { DateTime } from "luxon";
 import NextLink from "next/link";
 import React from "react";
@@ -8,7 +9,11 @@ interface Props {
   data: BookItemsQuery;
 }
 
-const BookItemsTable = ({ data }: BookItemsQueryResult) => {
+const BookItemsTable = ({ data }) => {
+  if (!data) {
+    return <Box>No data</Box>;
+  }
+
   return (
     <table className={styles.table2}>
       <thead>
@@ -22,8 +27,8 @@ const BookItemsTable = ({ data }: BookItemsQueryResult) => {
         </tr>
       </thead>
       <tbody>
-        {data.bookItems.map((b) => (
-          <tr>
+        {data.map((b) => (
+          <tr key={b.id}>
             <td>
               <NextLink
                 href="/bookItem/[id]"

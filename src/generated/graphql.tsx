@@ -17,6 +17,7 @@ export type Query = {
   __typename?: 'Query';
   bookItem: BookItem;
   bookItems: Array<BookItem>;
+  paginatedBookItems: PaginatedBookItems;
   authors: Array<Author>;
   books: Array<Book>;
   checkedOutBooks: Array<CheckedOutBooks>;
@@ -28,6 +29,13 @@ export type Query = {
 
 export type QueryBookItemArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryPaginatedBookItemsArgs = {
+  input: SearchBooksInput;
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
 };
 
 export type BookItem = {
@@ -61,6 +69,18 @@ export type Book = {
   bookItem: BookItem;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type PaginatedBookItems = {
+  __typename?: 'PaginatedBookItems';
+  bookItems: Array<BookItem>;
+  hasMore: Scalars['Boolean'];
+};
+
+export type SearchBooksInput = {
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
 };
 
 export type CheckedOutBooks = {
@@ -412,6 +432,29 @@ export type MeQuery = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username' | 'studentId' | 'email' | 'status' | 'isLibrarian' | 'numberOfBooksCheckedOut' | 'createdAt' | 'updatedAt'>
   )> }
+);
+
+export type PaginatedBookItemsQueryVariables = Exact<{
+  input: SearchBooksInput;
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+}>;
+
+
+export type PaginatedBookItemsQuery = (
+  { __typename?: 'Query' }
+  & { paginatedBookItems: (
+    { __typename?: 'PaginatedBookItems' }
+    & Pick<PaginatedBookItems, 'hasMore'>
+    & { bookItems: Array<(
+      { __typename?: 'BookItem' }
+      & Pick<BookItem, 'id' | 'title' | 'edition' | 'category' | 'numberOfCopies' | 'publicationDate' | 'createdAt' | 'updatedAt'>
+      & { author: (
+        { __typename?: 'Author' }
+        & Pick<Author, 'id' | 'authorName' | 'description'>
+      ) }
+    )> }
+  ) }
 );
 
 
@@ -948,3 +991,53 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const PaginatedBookItemsDocument = gql`
+    query PaginatedBookItems($input: SearchBooksInput!, $limit: Int!, $offset: Int!) {
+  paginatedBookItems(input: $input, limit: $limit, offset: $offset) {
+    bookItems {
+      id
+      title
+      author {
+        id
+        authorName
+        description
+      }
+      edition
+      category
+      numberOfCopies
+      publicationDate
+      createdAt
+      updatedAt
+    }
+    hasMore
+  }
+}
+    `;
+
+/**
+ * __usePaginatedBookItemsQuery__
+ *
+ * To run a query within a React component, call `usePaginatedBookItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginatedBookItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePaginatedBookItemsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function usePaginatedBookItemsQuery(baseOptions: Apollo.QueryHookOptions<PaginatedBookItemsQuery, PaginatedBookItemsQueryVariables>) {
+        return Apollo.useQuery<PaginatedBookItemsQuery, PaginatedBookItemsQueryVariables>(PaginatedBookItemsDocument, baseOptions);
+      }
+export function usePaginatedBookItemsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginatedBookItemsQuery, PaginatedBookItemsQueryVariables>) {
+          return Apollo.useLazyQuery<PaginatedBookItemsQuery, PaginatedBookItemsQueryVariables>(PaginatedBookItemsDocument, baseOptions);
+        }
+export type PaginatedBookItemsQueryHookResult = ReturnType<typeof usePaginatedBookItemsQuery>;
+export type PaginatedBookItemsLazyQueryHookResult = ReturnType<typeof usePaginatedBookItemsLazyQuery>;
+export type PaginatedBookItemsQueryResult = Apollo.QueryResult<PaginatedBookItemsQuery, PaginatedBookItemsQueryVariables>;
