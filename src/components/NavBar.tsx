@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   ChakraProps,
   Drawer,
   DrawerBody,
@@ -46,11 +47,14 @@ const NavBar = (props: ChakraProps) => {
         <MenuItems>
           <DarkModeSwitch />
         </MenuItems>
-        <MenuItems>
-          <NextLink href="/login">Login</NextLink>
-        </MenuItems>
+
         <MenuItems>
           <NextLink href="/register">Register</NextLink>
+        </MenuItems>
+        <MenuItems>
+          <NextLink href="/login">
+            <Button variant="outline">Login</Button>
+          </NextLink>
         </MenuItems>
       </>
     );
@@ -81,9 +85,9 @@ const NavBar = (props: ChakraProps) => {
           </NextLink>
         </MenuItems>
         <MenuItems>
-          <NextLink href={`/${data.me.username}`}>
+          <NextLink href={`profile/${data.me.username}`}>
             <Text fontSize="xl" cursor="pointer">
-              {data.me.username}
+              <Button variant="outline">{data.me.username}</Button>
             </Text>
           </NextLink>
         </MenuItems>
@@ -98,7 +102,10 @@ const NavBar = (props: ChakraProps) => {
       top={0}
       position="sticky"
       zIndex={100}
-      boxShadow="lg"
+      // boxShadow="sm"
+      boxShadow={` ${
+        !isDark ? "rgba(149, 157, 165, 0.2)" : "rgba(0, 0, 0, 0.2)"
+      } 0px 8px 24px`}
       bg={!isDark ? "white" : "gray.800"}
     >
       <Flex

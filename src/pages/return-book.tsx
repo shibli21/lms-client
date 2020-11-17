@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { Container } from "../components/Container";
+import { Footer } from "../components/Footer";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import { useReturnBookMutation } from "../generated/graphql";
@@ -15,8 +16,8 @@ const ReturnBook = (props: Props) => {
   const [returnBook] = useReturnBookMutation();
   return (
     <Container>
-      <Main>
-        <Heading>Return Book</Heading>
+      <Main maxW="400px">
+        <Heading color="cyan.500">Return Book</Heading>
         <Formik
           initialValues={{
             isbn: `${router.query.isbn ? router.query.isbn : ""}`,
@@ -55,6 +56,7 @@ const ReturnBook = (props: Props) => {
           )}
         </Formik>
       </Main>
+      <Footer />
     </Container>
   );
 };

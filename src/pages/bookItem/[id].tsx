@@ -1,13 +1,29 @@
-import { Box, Flex, Heading, IconButton, Spinner, Text } from "@chakra-ui/core";
+import {
+  Box,
+  Flex,
+  Heading,
+  Icon,
+  IconButton,
+  Spinner,
+  Text,
+} from "@chakra-ui/core";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {
+  FaArrowCircleLeft,
+  FaArrowLeft,
+  FaBackward,
+  FaEdit,
+  FaTrash,
+} from "react-icons/fa";
 import styles from "../../styles/table.module.css";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
 import { useBookItemQuery } from "../../generated/graphql";
 import BooksTable from "../../components/BooksTable";
 import BookItemTable from "../../components/BookItemTable";
+import { Footer } from "../../components/Footer";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const BookItem = () => {
   const router = useRouter();
@@ -21,17 +37,7 @@ const BookItem = () => {
   });
 
   if (loading) {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!data?.bookItem) {
@@ -48,26 +54,11 @@ const BookItem = () => {
         <Flex
           align={["flex-start", "center"]}
           justifyContent={["space-between", "space-between"]}
-          direction={["column", "row", "row", "row"]}
+          direction={["row", "row", "row", "row"]}
         >
-          <Box>
-            <Flex align="baseline">
-              <Text
-                fontSize={["3xl", "3xl", "4xl", "6xl"]}
-                color="blue.500"
-                fontWeight="bold"
-              >
-                {data.bookItem.title}
-              </Text>
-              <Text
-                fontSize={["md", "md", "xl", "2xl"]}
-                fontWeight="semibold"
-                ml={4}
-              >
-                by {data.bookItem.author.authorName}
-              </Text>
-            </Flex>
-          </Box>
+          <NextLink href="/">
+            <Icon as={FaArrowLeft} />
+          </NextLink>
           <Flex>
             <IconButton
               aria-label="delete"
@@ -75,12 +66,14 @@ const BookItem = () => {
               colorScheme="red"
               mr={4}
               size="sm"
+              // variant="ghost"
             />
             <NextLink
               href="/bookItem/edit/[id]"
               as={`/bookItem/edit/${data.bookItem.id}`}
             >
               <IconButton
+                // variant="ghost"
                 aria-label="edit"
                 icon={<FaEdit />}
                 colorScheme="blue"
@@ -93,6 +86,7 @@ const BookItem = () => {
         <Heading color="blue.500">Available Books</Heading>
         <BooksTable data={data.bookItem.books} />
       </Main>
+      <Footer />
     </Container>
   );
 };

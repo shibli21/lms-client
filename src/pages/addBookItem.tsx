@@ -20,7 +20,7 @@ const AddBookItem = (props: Props) => {
 
   return (
     <Container>
-      <Main>
+      <Main maxW={"400px"}>
         <Formik
           initialValues={{ title: "", category: "", edition: "", authorId: "" }}
           onSubmit={async (values) => {
@@ -74,7 +74,7 @@ const AddBookItem = (props: Props) => {
           )}
         </Formik>
       </Main>
-      <Footer> copy; All rights reserve by shibli</Footer>
+      <Footer />
     </Container>
   );
 };

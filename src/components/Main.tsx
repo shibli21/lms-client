@@ -7,6 +7,11 @@ export const Main = (props: StackProps) => (
     maxWidth="1024px"
     px="1rem"
     pt="1rem"
+    css={{
+      ":first-of-type": {
+        marginTop: "30px",
+      },
+    }}
     {...props}
   />
 );

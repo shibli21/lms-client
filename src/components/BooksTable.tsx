@@ -1,26 +1,31 @@
+import { Box } from "@chakra-ui/core";
 import React from "react";
-import styles from "../styles/table.module.css";
+import style from "../styles/table.scss";
 
 const BooksTable = ({ data }) => {
   return (
-    <table className={styles.table2}>
-      <thead>
-        <tr>
-          <th>ISBN</th>
-          <th>Rack Number</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((b) => (
+    <Box className={style.table}>
+      <table>
+        <thead>
           <tr>
-            <td>{b.isbnNumber}</td>
-            <td>{b.rackNumber}</td>
-            <td>{b.status ? "Available" : "Not Available"}</td>
+            <th>ISBN</th>
+            <th>Rack Number</th>
+            <th>Status</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((b) => (
+            <tr>
+              <td data-label="ISBN">{b.isbnNumber}</td>
+              <td data-label="Rack Number">{b.rackNumber}</td>
+              <td data-label="Status">
+                {b.status ? "Available" : "Not Available"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Box>
   );
 };
 

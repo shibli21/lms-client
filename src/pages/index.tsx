@@ -1,11 +1,11 @@
 import {
   Box,
   Button,
+  Flex,
   FormLabel,
   Heading,
   HStack,
   Input,
-  Spinner,
 } from "@chakra-ui/core";
 import { useFormik } from "formik";
 import Head from "next/head";
@@ -14,6 +14,8 @@ import React, { useState } from "react";
 import BookItemsTable from "../components/BookItemsTable";
 import { Container } from "../components/Container";
 import { Footer } from "../components/Footer";
+import Hero from "../components/Hero";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { Main } from "../components/Main";
 import { usePaginatedBookItemsQuery } from "../generated/graphql";
 
@@ -68,49 +70,15 @@ export default function Home() {
     }
     setOffset(offset - limit);
     await refetch({
-      input: {
-        author: formik.values.author,
-        title: formik.values.title,
-        category: formik.values.category,
-      },
-      limit,
       offset,
     });
   };
   const fetchNextPage = async () => {
     setOffset(offset + limit);
     refetch({
-      input: {
-        author: formik.values.author,
-        title: formik.values.title,
-        category: formik.values.category,
-      },
-      limit,
       offset,
     });
   };
-
-  if (loading) {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
-  }
-
-  if (!data?.paginatedBookItems) {
-    return (
-      <Container>
-        <Box>could not find any post</Box>
-      </Container>
-    );
-  }
 
   return (
     <Container>
@@ -118,8 +86,6 @@ export default function Home() {
         <title>Library management system</title>
       </Head>
       <Main>
-        <Heading align="center">Welcome to</Heading>
-        <Heading align="center">Library Management System</Heading>
         <HStack>
           <NextLink href="/addBookItem">
             <Button colorScheme="blue">Add New Book</Button>
@@ -128,54 +94,72 @@ export default function Home() {
         </HStack>
         <HStack>
           <form onSubmit={formik.handleSubmit}>
-            <HStack spacing={6}>
-              <FormLabel htmlFor="title">Title</FormLabel>
-              <Input
-                id="title"
-                name="title"
-                type="search"
-                onChange={formik.handleChange}
-                value={formik.values.title}
-              />
-              <FormLabel htmlFor="author">Author</FormLabel>
-              <Input
-                id="author"
-                name="author"
-                type="search"
-                onChange={formik.handleChange}
-                value={formik.values.author}
-              />
-              <FormLabel htmlFor="category">Category</FormLabel>
-              <Input
-                id="category"
-                name="category"
-                type="search"
-                onChange={formik.handleChange}
-                value={formik.values.category}
-              />
-            </HStack>
-            <Button
-              mt={6}
-              type="submit"
-              isLoading={formik.isSubmitting}
-              colorScheme="blue"
+            <Flex
+              align={["flex-start", "flex-end"]}
+              direction={["column", "row", "row", "row"]}
+              w="100%"
             >
-              Search
-            </Button>
+              <Box mr={6}>
+                <FormLabel htmlFor="title">Title</FormLabel>
+                <Input
+                  id="title"
+                  name="title"
+                  type="search"
+                  onChange={formik.handleChange}
+                  value={formik.values.title}
+                  variant="outline"
+                />
+              </Box>
+              <Box mr={6}>
+                <FormLabel htmlFor="author">Author</FormLabel>
+                <Input
+                  id="author"
+                  name="author"
+                  type="search"
+                  onChange={formik.handleChange}
+                  value={formik.values.author}
+                />
+              </Box>
+              <Box mr={6}>
+                <FormLabel htmlFor="category">Category</FormLabel>
+                <Input
+                  id="category"
+                  name="category"
+                  type="search"
+                  onChange={formik.handleChange}
+                  value={formik.values.category}
+                />
+              </Box>
+              <Button
+                mt={6}
+                type="submit"
+                isLoading={formik.isSubmitting}
+                colorScheme="blue"
+              >
+                Search
+              </Button>
+            </Flex>
           </form>
         </HStack>
-
-        <BookItemsTable data={data.paginatedBookItems.bookItems} />
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          <BookItemsTable data={data.paginatedBookItems.bookItems} />
+        )}
         <HStack>
           {offset > 0 ? (
-            <Button onClick={() => fetchPrevPage()}>Previous Page</Button>
+            <Button onClick={() => fetchPrevPage()} colorScheme="blue">
+              Previous Page
+            </Button>
           ) : null}
-          {data.paginatedBookItems.hasMore ? (
-            <Button onClick={() => fetchNextPage()}>Next Page</Button>
+          {data?.paginatedBookItems.hasMore ? (
+            <Button onClick={() => fetchNextPage()} colorScheme="blue">
+              Next Page
+            </Button>
           ) : null}
         </HStack>
       </Main>
-      <Footer> copy; All rights reserve by shibli</Footer>
+      <Footer />
     </Container>
   );
 }

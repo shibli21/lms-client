@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { Container } from "../components/Container";
+import { Footer } from "../components/Footer";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import {
@@ -20,8 +21,8 @@ const RenewBook = (props: Props) => {
 
   return (
     <Container>
-      <Main>
-        <Heading>Renew Book</Heading>
+      <Main maxW="400px">
+        <Heading color="cyan.500">Renew Book</Heading>
         <Formik
           initialValues={{
             isbn: `${router.query.isbn ? router.query.isbn : ""}`,
@@ -72,6 +73,7 @@ const RenewBook = (props: Props) => {
           )}
         </Formik>
       </Main>
+      <Footer />
     </Container>
   );
 };

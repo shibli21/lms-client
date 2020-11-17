@@ -1,0 +1,85 @@
+.table {
+  table {
+    margin: 25px auto;
+    border-collapse: collapse;
+    border: 1px solid #eee;
+    border-bottom: 2px solid #00b5d8;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1),
+      0px 10px 20px rgba(0, 0, 0, 0.05), 0px 20px 20px rgba(0, 0, 0, 0.05),
+      0px 30px 20px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  table caption {
+    font-size: 1.5em;
+    margin: 0.5em 0 0.75em;
+  }
+
+  table tr:hover {
+    background: #f4f4f4;
+  }
+
+  tr:hover td {
+    color: #555;
+  }
+
+  table th,
+  table td {
+    color: #999;
+    border: 1px solid #eee;
+    padding: 12px 10px;
+    border-collapse: collapse;
+  }
+  table th {
+    background: #00b5d8;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  table th:last-child {
+    border-right: none;
+  }
+
+  @media screen and (max-width: 600px) {
+    table {
+      border: 0;
+    }
+
+    table caption {
+      font-size: 1.3em;
+    }
+
+    table thead {
+      border: none;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    table tr {
+      border-bottom: 3px solid #ddd;
+      display: block;
+      margin-bottom: 0.625em;
+    }
+
+    table td {
+      display: block;
+      font-size: 0.8em;
+      text-align: right;
+    }
+
+    table td::before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #00b5d8;
+    }
+  }
+}

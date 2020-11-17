@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { Container } from "../components/Container";
+import { Footer } from "../components/Footer";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import { useIssueBookMutation } from "../generated/graphql";
@@ -15,8 +16,8 @@ const IssueNewBook = (props: Props) => {
   const [issueBook] = useIssueBookMutation();
   return (
     <Container>
-      <Main>
-        <Heading>Issue Book</Heading>
+      <Main maxW="400px">
+        <Heading color="cyan.500">Issue Book</Heading>
         <Formik
           initialValues={{ book: "" }}
           onSubmit={async (values, { setErrors }) => {
@@ -53,6 +54,7 @@ const IssueNewBook = (props: Props) => {
           )}
         </Formik>
       </Main>
+      <Footer />
     </Container>
   );
 };

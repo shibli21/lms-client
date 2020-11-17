@@ -1,9 +1,10 @@
-import { Box, Button, Stack } from "@chakra-ui/core";
+import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/core";
 import { Form, Formik } from "formik";
-import NextLink from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { Container } from "../components/Container";
+import { Footer } from "../components/Footer";
 import InputField from "../components/InputField";
 import { Main } from "../components/Main";
 import { MeDocument, useRegisterMutation } from "../generated/graphql";
@@ -18,6 +19,7 @@ const Register = (props: RegisterProps) => {
   return (
     <Container>
       <Main maxW={"400px"}>
+        <Heading color="cyan.500">Sign up.</Heading>
         <Formik
           initialValues={{
             username: "",
@@ -52,38 +54,46 @@ const Register = (props: RegisterProps) => {
             }
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, isValid }) => (
             <Form>
               <Stack spacing={6}>
+                <InputField name="username" placeholder="name" label="Name" />
                 <InputField
-                  name="username"
-                  placeholder="Username"
-                  label="Username"
+                  name="email"
+                  placeholder="name@domain.com"
+                  label="Email"
                 />
-                <InputField name="email" placeholder="Email" label="Email" />
                 <InputField
                   name="studentId"
-                  placeholder="Student Id"
+                  placeholder="Student id"
                   label="Student Id"
                 />
                 <InputField
                   name="password"
-                  placeholder="Password"
+                  placeholder="at least 6 characters"
                   label="Password"
+                  type="password"
                 />
+                <Button
+                  mt={6}
+                  type="submit"
+                  isLoading={isSubmitting}
+                  colorScheme="blue"
+                >
+                  Register
+                </Button>
               </Stack>
-              <Button
-                mt={6}
-                type="submit"
-                isLoading={isSubmitting}
-                colorScheme="blue"
-              >
-                Register
-              </Button>
             </Form>
           )}
         </Formik>
+        <Flex justify="center">
+          Already have a account ?
+          <Box color="cyan.500" ml={2}>
+            <Link href="/login">Sign in</Link>
+          </Box>
+        </Flex>
       </Main>
+      <Footer />
     </Container>
   );
 };

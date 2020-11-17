@@ -30,6 +30,7 @@ import InputField from "../../../components/InputField";
 import { Footer } from "../../../components/Footer";
 import { toErrorMap } from "../../../utils/toErrorMap";
 import { route } from "next/dist/next-server/server/router";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 interface Props {}
 
@@ -46,17 +47,7 @@ const EditBookItem = (props: Props) => {
   const [addCopy] = useAddCopiesOfBookToLibraryMutation();
 
   if (loading) {
-    return (
-      <Container>
-        <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        />
-      </Container>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!data?.bookItem) {
@@ -70,22 +61,7 @@ const EditBookItem = (props: Props) => {
   return (
     <Container>
       <Main>
-        <Flex align="baseline">
-          <Text
-            fontSize={["3xl", "3xl", "4xl", "6xl"]}
-            color="blue.500"
-            fontWeight="bold"
-          >
-            {data.bookItem.title}
-          </Text>
-          <Text
-            fontSize={["md", "md", "xl", "2xl"]}
-            fontWeight="semibold"
-            ml={4}
-          >
-            by {data.bookItem.author.authorName}
-          </Text>
-        </Flex>
+        <BookItemTable data={data.bookItem} />
         <Formik
           initialValues={{ rackNumber: "", isbn: "" }}
           onSubmit={async (values, { setErrors }) => {
@@ -113,7 +89,7 @@ const EditBookItem = (props: Props) => {
             }
           }}
         >
-          {({ isSubmitting, resetForm }) => (
+          {({ isSubmitting }) => (
             <Form>
               <Stack spacing={6}>
                 <InputField
@@ -138,11 +114,10 @@ const EditBookItem = (props: Props) => {
             </Form>
           )}
         </Formik>
-        <BookItemTable data={data.bookItem} />
         <Heading color="blue.500">Available Books</Heading>
         <BooksTable data={data.bookItem.books} />
       </Main>
-      <Footer>&copy; All rights reserved by shibli</Footer>
+      <Footer />
     </Container>
   );
 };

@@ -1,5 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/core";
-import theme from "../theme";
+import theme from "../theme/theme";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import React from "react";
 

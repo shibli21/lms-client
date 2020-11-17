@@ -1,12 +1,12 @@
-import { Text } from "@chakra-ui/core";
+import { Box, Text } from "@chakra-ui/core";
 import React from "react";
 
 interface MenuItemsProps {}
 
 const MenuItems: React.FC<MenuItemsProps> = ({ children }) => (
-  <Text fontSize="20px" ml={[0, 0, 6, 6]}>
+  <Box fontSize="20px" ml={[0, 0, 6, 6]}>
     {children}
-  </Text>
+  </Box>
 );
 
 export default MenuItems;
